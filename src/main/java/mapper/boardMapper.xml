@@ -6,5 +6,10 @@
   <mapper namespace="boardMapper">
   
   <!-- SQL 구문 작성 -->
+  <insert id="add" parameterType="domain.Board">
+     INSERT INTO board (title, content, writer)
+        VALUES (#{title}, #{content}, #{writer}) 
+  
+  </insert>
   
   </mapper>

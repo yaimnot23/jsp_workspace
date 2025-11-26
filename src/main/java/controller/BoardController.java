@@ -82,7 +82,7 @@ public class BoardController extends HttpServlet {
 				log.info(" >>> insert : {}", (isOK > 0 ? "등록성공" : "등록실패"));
 				
 				//처리 후 보내야하는 주소
-				destPage = "/board/insert.jsp";
+				destPage = "/index.jsp";
 				
 			} catch (Exception e) {
 				e.printStackTrace();
