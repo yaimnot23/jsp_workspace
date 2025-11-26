@@ -1,0 +1,27 @@
+-- 2025-11-26
+-- DB 생성
+
+-- root 계정으로 생성
+-- jspdb / jspuser / mysql
+
+create database jspdb;
+
+use mysql;
+-- user 생성
+create user 'jspuser'@'localhost' identified by 'mysql';
+grant all privileges on jspdb.* to 'jspuser'@'localhost';
+flush privileges;
+
+-- jspdb로 접속
+-- board 테이블 생성
+use jspdb;
+create table board(
+    bno int auto_increment not null ,
+    title varchar(100) not null,
+    content text not null,
+    writer varchar(100) not null,
+    context text,
+    regdate datetime default now(),
+    moddate datetime default now(),
+    primary key(bno)
+);
