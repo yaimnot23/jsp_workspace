@@ -6,6 +6,8 @@ import repository.BoardDAO;
 import repository.BoardDAOImpl;
 import org.slf4j.LoggerFactory;
 
+import domain.Board;
+
 public class BoardServiceImpl implements BoardService {
 	
 	//로그객체
@@ -16,6 +18,13 @@ public class BoardServiceImpl implements BoardService {
 	
 	public BoardServiceImpl() {
 		bdao = new BoardDAOImpl();
+	}
+
+	@Override
+	public int insert(Board b) {
+		// TODO Auto-generated method stub
+		log.info("BoardServiceImpl Test");
+		return bdao.insert(b);
 	}
 
 }

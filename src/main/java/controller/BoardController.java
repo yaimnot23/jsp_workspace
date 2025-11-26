@@ -12,13 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import domain.Board;
 import service.BoardService;
 import service.BoardServiceImpl;
 
 /**
  * Servlet implementation class BoardController
  */
-@WebServlet("/brd")
+@WebServlet("/brd/*")
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// 로그객체 생성
@@ -47,6 +48,53 @@ public class BoardController extends HttpServlet {
 	 */
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// get, post 등 오는 모든 요청을 service 메서드에서 처리
+		log.info("BoardController service method in Test");
+		// jsp에서 요청하는 주소를 받는 객체 /brd/register
+		String uri = request.getRequestURI();
+		log.info(" >>> {}", uri);
+		
+		//post로 들어오는 객체는 한글깨짐 방지 => 인코딩 설정
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		
+		String path = uri.substring(uri.lastIndexOf("/") + 1);
+		
+		switch(path) {
+		case "register":
+			destPage = "/board/register.jsp"; // webapp 기준
+			break;
+		case "insert":
+			try {
+				// title, writer, content
+				String title = request.getParameter("title"); // name 값으로 추출
+				String writer = request.getParameter("writer");
+				String content = request.getParameter("content");
+				
+				// DB에 등록하기 위한 객체 생성
+				Board b = new Board(title, writer, content);
+				log.info(" >>> b : {}", b);
+				
+				//boardService 객체로 해당 객체 전달
+				isOK = bsv.insert(b);
+				
+				//DB에서 저장이 잘 완료되면 1이 리턴, 안되면 0 리턴
+				log.info(" >>> insert : {}", (isOK > 0 ? "등록성공" : "등록실패"));
+				
+				//처리 후 보내야하는 주소
+				destPage = "/board/insert.jsp";
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+			
+		}
+		
+		// 처리가 완료된 만들어진 응답객체를 jsp화면으로 보내기
+		rdp = request.getRequestDispatcher(destPage);
+		// 요청한 객체를 가지고 destPage로 포워딩
+		rdp.forward(request, response);
 	}
 
 	/**
