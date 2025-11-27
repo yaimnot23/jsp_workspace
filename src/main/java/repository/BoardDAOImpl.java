@@ -49,4 +49,14 @@ public class BoardDAOImpl implements BoardDAO {
 	    return sql.selectOne("boardMapper.detail", bno);
 	}
 
+	@Override
+	public int update(Board b) {
+	    int isOK = sql.update("boardMapper.update", b);
+	    
+	    if(isOK > 0) sql.commit();
+	    else sql.rollback();
+	    
+	    return isOK;
+	}
+
 }

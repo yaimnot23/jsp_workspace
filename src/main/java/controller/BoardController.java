@@ -32,7 +32,7 @@ public class BoardController extends HttpServlet {
     }
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// [중요 수정] 멤버 변수에 있던 destPage, rdp, isOK를 여기로 옮김 (Thread-Safe)
+		// 멤버 변수에 있던 destPage, rdp, isOK를 여기로 옮김
 		RequestDispatcher rdp = null;
 		String destPage = "";
 		int isOK = 0;
@@ -57,20 +57,15 @@ public class BoardController extends HttpServlet {
 				String writer = request.getParameter("writer");
 				String content = request.getParameter("content");
 				
-				// [중요 수정 1] 생성자 순서 변경
-				// Board.java의 생성자가 (title, content, writer) 순서이므로 이에 맞춤
 				Board b = new Board(title, content, writer); 
 				log.info(" >>> b : {}", b);
 				
-				// [중요 수정 2] 주석 해제 & 위치 이동
 				// DB에 먼저 넣고 나서 이동해야 함
 				isOK = bsv.insert(b);
 				log.info(" >>> insert : {}", (isOK > 0 ? "등록성공" : "등록실패"));
 				
-				// [중요 수정 3] 리다이렉트 & return
-				// 글 쓰기가 끝나면 목록으로 다시 접속시킴 (새로고침 중복 방지)
 				response.sendRedirect("/brd/list");
-				return; // 여기서 메서드 종료!
+				return; // 여기서 메서드 종료
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -80,7 +75,7 @@ public class BoardController extends HttpServlet {
 		case "list":
 			try {
 				List<Board> list = bsv.getList();
-				// log.info(" >>> list : {}", list); // 로그 너무 길면 주석 처리
+				// log.info(" >>> list : {}", list);
 				request.setAttribute("list", list);
 				destPage = "/board/list.jsp";
 			} catch (Exception e) {

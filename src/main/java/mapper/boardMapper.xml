@@ -20,5 +20,11 @@
   <select id="detail" parameterType="int" resultType="domain.Board">
     SELECT * FROM board WHERE bno = #{bno}
 </select>
+
+<update id="update" parameterType="domain.Board">
+    UPDATE board 
+    SET title = #{title}, content = #{content} 
+    WHERE bno = #{bno}
+</update>
   
   </mapper>

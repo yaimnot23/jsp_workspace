@@ -11,5 +11,7 @@ public interface BoardDAO {
 	List<Board> getList();
 
 	Board getDetail(int bno);
+	
+	int update(Board b);
 
 }
