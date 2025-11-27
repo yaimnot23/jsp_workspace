@@ -96,6 +96,48 @@ public class CommentController extends HttpServlet {
 				e.printStackTrace();
 			}
 			break;
+			
+		case "modify":
+            try {
+                StringBuffer sb = new StringBuffer();
+                String line = "";
+                BufferedReader br = request.getReader();
+                while((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObj = (JSONObject) parser.parse(sb.toString());
+                
+                int cno = Integer.parseInt(jsonObj.get("cno").toString());
+                String content = jsonObj.get("content").toString();
+                
+                Comment cvo = new Comment(cno, content);
+                int isOk = csv.modify(cvo);
+                log.info(">>> modify result : " + isOk);
+                
+                PrintWriter out = response.getWriter();
+                out.print(isOk);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            break;
+            
+        case "remove":
+            try {
+                // 쿼리스트링(?cno=1) 방식으로 삭제 요청을 받음
+                int cno = Integer.parseInt(request.getParameter("cno"));
+                int isOk = csv.remove(cno);
+                log.info(">>> remove result : " + isOk);
+                
+                PrintWriter out = response.getWriter();
+                out.print(isOk);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            break;
 		}
 	}
 

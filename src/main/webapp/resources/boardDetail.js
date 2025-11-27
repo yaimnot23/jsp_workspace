@@ -1,6 +1,8 @@
 console.log("boardDetail.js in");
 console.log("bnoValue: " + bnoVal);
 
+getCommentList(bnoVal);
+
 document.getElementById('cmtAddBtn').addEventListener('click', () => {
     const cmtWriter = document.getElementById('cmtWriter').value;
     const cmtText = document.getElementById('cmtText').value;
@@ -60,20 +62,109 @@ async function getCommentList(bno) {
     }
 }
 
-// 화면에 댓글 뿌리기
+// 화면에 댓글 뿌리기 (디자인 개선)
 function spreadCommentList(result) {
     const div = document.getElementById('commentLine');
     div.innerHTML = ""; // 기존 내용 초기화
     
     let html = "";
     for(let i=0; i<result.length; i++) {
+        html += `<div class="comment-box" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px;">`;
+        
+        // 1. 작성자 및 날짜 영역
+        html += `<div style="margin-bottom: 5px;">`;
+        html +=     `<strong>${result[i].writer}</strong> `; // 작성자 진하게
+        html +=     `<span style="font-size: 12px; color: gray;">${result[i].regdate}</span>`; // 날짜는 작고 회색으로
+        html += `</div>`;
+        
+        // 2. 댓글 내용 (수정 가능하도록 input 사용)
+        html += `<div style="margin-bottom: 5px;">`;
+        html +=     `<input type="text" class="cmtText" value="${result[i].content}" style="width: 100%; padding: 5px;">`;
+        html += `</div>`;
+        
+        // 3. 버튼 영역
         html += `<div>`;
-        html += `<div>${result[i].cno}, ${result[i].bno}, ${result[i].writer}, ${result[i].regdate}</div>`;
-        html += `<div>`;
-        html += `<input type="text" value="${result[i].content}">`;
-        html += `<button type="button">수정</button>`;
-        html += `<button type="button">삭제</button>`;
-        html += `</div></div><hr>`;
+        html +=     `<button type="button" data-cno="${result[i].cno}" class="modBtn">수정</button> `;
+        html +=     `<button type="button" data-cno="${result[i].cno}" class="delBtn">삭제</button>`;
+        html += `</div>`;
+        
+        html += `</div>`; // comment-box 닫기
     }
     div.innerHTML = html;
+}
+
+// 수정, 삭제 버튼 클릭 이벤트 감지 (이벤트 위임)
+document.addEventListener('click', (e) => {
+    // 1. 수정 버튼 클릭 시
+    if(e.target.classList.contains('modBtn')){
+        // 버튼에 있는 data-cno 값 가져오기
+        let cnoVal = e.target.dataset.cno;
+        // 내 버튼이 속한 div를 찾고, 그 안의 input 값을 찾음
+        let div = e.target.closest('div').parentElement; // comment-box div
+        let cmtText = div.querySelector(".cmtText").value;
+        
+        console.log("update cno:", cnoVal, "content:", cmtText);
+        
+        // 서버로 전송
+        updateCommentToServer(cnoVal, cmtText).then(result => {
+            if(result > 0){
+                alert("댓글 수정 성공");
+                getCommentList(bnoVal);
+            } else {
+                alert("수정 실패");
+            }
+        });
+    }
+    
+    // 2. 삭제 버튼 클릭 시
+    if(e.target.classList.contains('delBtn')){
+        let cnoVal = e.target.dataset.cno;
+        console.log("delete cno:", cnoVal);
+        
+        // 삭제는 되돌릴 수 없으니 확인창 띄우기
+        if(confirm('정말 삭제하시겠습니까?')) {
+            removeCommentToServer(cnoVal).then(result => {
+                if(result > 0){
+                    alert("댓글 삭제 성공");
+                    getCommentList(bnoVal);
+                } else {
+                    alert("삭제 실패");
+                }
+            });
+        }
+    }
+});
+
+// 서버에 수정 요청 (JSON)
+async function updateCommentToServer(cno, content) {
+    try {
+        const url = "/cmt/modify";
+        const config = {
+            method: 'post', // put or patch도 가능하지만 여기선 post로 처리
+            headers: {
+                'content-type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({cno: cno, content: content})
+        };
+        const resp = await fetch(url, config);
+        const result = await resp.text();
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// 서버에 삭제 요청 (Parameter)
+async function removeCommentToServer(cno) {
+    try {
+        const url = "/cmt/remove?cno=" + cno;
+        const config = {
+            method: 'post' // get으로도 가능하지만 post로 처리
+        };
+        const resp = await fetch(url, config);
+        const result = await resp.text();
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
 }

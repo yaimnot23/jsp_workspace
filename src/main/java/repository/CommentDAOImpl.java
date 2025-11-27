@@ -28,4 +28,18 @@ public class CommentDAOImpl implements CommentDAO {
 	public List<Comment> getList(int bno) {
 		return sql.selectList(NS + "list", bno);
 	}
+
+	@Override
+    public int update(Comment cvo) {
+        int isOk = sql.update(NS + "mod", cvo); // 매퍼의 id="mod" 실행
+        if(isOk > 0) sql.commit();
+        return isOk;
+    }
+
+    @Override
+    public int delete(int cno) {
+        int isOk = sql.delete(NS + "del", cno); // 매퍼의 id="del" 실행
+        if(isOk > 0) sql.commit();
+        return isOk;
+    }
 }

@@ -11,9 +11,15 @@ public class Comment {
 		
 	}
 	
+	
+	
 	// insert
 	public Comment(int bno, String writer, String content) {
+	    this.bno = bno;
+	    this.writer = writer;
+	    this.content = content;
 	}
+	
 	// modify
 	public Comment(int cno, String content) {
 		this.cno = cno;
