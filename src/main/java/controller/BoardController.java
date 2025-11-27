@@ -88,39 +88,19 @@ public class BoardController extends HttpServlet {
 			}
 			break;
 			
-		case "detail":
+		case "detail": case "modify":
 			try {
 				int bno = Integer.parseInt(request.getParameter("bno"));
 				Board board = bsv.getDetail(bno);
 				// log.info(" >>> b : {}", board);
 				request.setAttribute("b", board);
-				destPage = "/board/detail.jsp";
+				destPage = "/board/"+ path + ".jsp";
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
 			
-		case "modify":
-			try {
-				int bno = Integer.parseInt(request.getParameter("bno"));
-				String title = request.getParameter("title");
-				String content = request.getParameter("content");
-				
-				Board b = new Board(bno, title, content);
-				log.info(" >>> b : {}", b);
-				
-				// 서비스 호출
-				// isOK = bsv.update(b);
-				// log.info(" >>> update : {}", (isOK > 0 ? "수정성공" : "수정실패"));
-				
-				// 수정 후 상세페이지로 이동
-				response.sendRedirect("/brd/detail?bno=" + bno);
-				return; // 여기서 메서드 종료!
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
+		
 		}
 		
 		
