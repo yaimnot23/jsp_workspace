@@ -17,4 +17,8 @@
   
   </select>
   
+  <select id="detail" parameterType="int" resultType="domain.Board">
+    SELECT * FROM board WHERE bno = #{bno}
+</select>
+  
   </mapper>

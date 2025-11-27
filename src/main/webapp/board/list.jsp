@@ -20,20 +20,15 @@
 <c:forEach items="${list}" var="b">
     <tr>
         <td>${b.bno}</td>
-        <td>${b.title}</a></td>
+        <td><a href="/brd/detail?bno=${b.bno }">${b.title}</a></td>
         <td>${b.writer}</td>
         <td>${b.regdate}</td>
+
      </tr>
 </c:forEach>
     
-    <%-- Sample data row --%>
-    <tr>
-        <td>1</td>
-        <td><a href="/brd/detail?bno=1">첫 번째 게시글 제목</a></td>
-        <td>홍길동</td>
-        <td>2024-06-01</td>
-    </tr>
-    <%-- Additional rows would be populated here dynamically --%>
+    </table>
+    <a href="/index.jsp">index로 이동</a>
 
 </body>
 </html>

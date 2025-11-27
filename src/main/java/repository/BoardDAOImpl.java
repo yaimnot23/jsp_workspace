@@ -25,7 +25,7 @@ public class BoardDAOImpl implements BoardDAO {
 		// sql.메서드(namespace.id, 파라미터)
 		// 메서드 => select, insert, update, delete
 		log.info("BoardDAOImpl Test");
-		sql.insert("boardMapper.add",b);
+//		sql.insert("boardMapper.add",b);
 		int isOK = sql.insert("boardMapper.add", b);
 		
 		// insert, update, delete DB 자체의 값이 변경되는 구문
@@ -42,6 +42,11 @@ public class BoardDAOImpl implements BoardDAO {
 		List<Board> list = sql.selectList("boardMapper.list");
 		
 		return list;
+	}
+	
+	@Override
+	public Board getDetail(int bno) {
+	    return sql.selectOne("boardMapper.detail", bno);
 	}
 
 }

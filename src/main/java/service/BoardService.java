@@ -10,4 +10,5 @@ public interface BoardService {
 
 	List<Board> getList();
 
+	Board getDetail(int bno);
 }

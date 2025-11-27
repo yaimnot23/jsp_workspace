@@ -8,8 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>수정 상세보기</h1>
-	<form action="/brd/modify" method="post">
+	<h1>게시판 상세보기</h1>
 	<table>
         <tr>
             <th>번호</th>
@@ -17,9 +16,7 @@
         </tr>
         <tr>
             <th>제목</th>
-            <td>
-            	<input>type="text" name="title" value="${b.title}">
-            </td>
+            <td>${b.title}</td>
         </tr>
         <tr>
             <th>작성자</th>
@@ -27,19 +24,18 @@
         </tr>
         <tr>
             <th>내용</th>
-            <td>
-            <textarea rows="10" cols"30 name="content" value=""></textarea>
-            </td>
+            <td>${b.content}</td>
         </tr>
         <tr>
             <th>등록일</th>
             <td>${b.regdate}</td>
         </tr>
         </table>
-        <button type="submit">수정</button>
-        <button type="reset">취소</button>
-        </form>
         
+        <!-- 수정, 삭제, 리스트 버튼 -->
+        <a href="/brd/modify?bno=${b.bno }"><button>수정</button></a>
+        <a href=""><button>삭제</button></a>
+        <a href="/brd/list"><button>리스트</button></a>
 
 </body>
 </html>

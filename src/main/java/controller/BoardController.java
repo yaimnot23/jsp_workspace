@@ -17,73 +17,60 @@ import domain.Board;
 import service.BoardService;
 import service.BoardServiceImpl;
 
-/**
- * Servlet implementation class BoardController
- */
 @WebServlet("/brd/*")
 public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	// 로그객체 생성
+	
+	// 로그 객체
 	private static final Logger log = LoggerFactory.getLogger(BoardController.class);
-	// RequestDispatcher - jsp에서 받은 요청을 처리한 후 다른 jsp로 응답을 보낼 때 사용하는 객체
-	private RequestDispatcher rdp;
-	//jsp (목적지)주소를 저장하는 변수
-	private String destPage;
 	
-	// isOK 변수 DB에서 구문값 체크를 의해 저장하는 변수
-	private int isOK;
-	
-	//service 연결 인터페이스
+	// 서비스 객체
 	private BoardService bsv;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public BoardController() {
         bsv = new BoardServiceImpl();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#service(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// get, post 등 오는 모든 요청을 service 메서드에서 처리
-		log.info("BoardController service method in Test");
-		// jsp에서 요청하는 주소를 받는 객체 /brd/register
-		String uri = request.getRequestURI();
-		log.info(" >>> {}", uri);
-		
-		//post로 들어오는 객체는 한글깨짐 방지 => 인코딩 설정
+		// [중요 수정] 멤버 변수에 있던 destPage, rdp, isOK를 여기로 옮김 (Thread-Safe)
+		RequestDispatcher rdp = null;
+		String destPage = "";
+		int isOK = 0;
+
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		
+		String uri = request.getRequestURI();
 		String path = uri.substring(uri.lastIndexOf("/") + 1);
+		
+		log.info(">>> path : {}", path);
 		
 		switch(path) {
 		case "register":
-			destPage = "/board/register.jsp"; // webapp 기준
+			destPage = "/board/register.jsp";
 			break;
+			
 		case "insert":
 			try {
-				// title, writer, content
-				String title = request.getParameter("title"); // name 값으로 추출
+				String title = request.getParameter("title");
 				String writer = request.getParameter("writer");
 				String content = request.getParameter("content");
 				
-				// DB에 등록하기 위한 객체 생성
-				Board b = new Board(title, writer, content);
+				// [중요 수정 1] 생성자 순서 변경
+				// Board.java의 생성자가 (title, content, writer) 순서이므로 이에 맞춤
+				Board b = new Board(title, content, writer); 
 				log.info(" >>> b : {}", b);
 				
-				//boardService 객체로 해당 객체 전달
+				// [중요 수정 2] 주석 해제 & 위치 이동
+				// DB에 먼저 넣고 나서 이동해야 함
 				isOK = bsv.insert(b);
-				
-				//DB에서 저장이 잘 완료되면 1이 리턴, 안되면 0 리턴
 				log.info(" >>> insert : {}", (isOK > 0 ? "등록성공" : "등록실패"));
 				
-				//처리 후 보내야하는 주소
-				destPage = "/index.jsp";
+				// [중요 수정 3] 리다이렉트 & return
+				// 글 쓰기가 끝나면 목록으로 다시 접속시킴 (새로고침 중복 방지)
+				response.sendRedirect("/brd/list");
+				return; // 여기서 메서드 종료!
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -91,40 +78,67 @@ public class BoardController extends HttpServlet {
 			break;
 		
 		case "list":
-			//목록보기(try~catch문)
 			try {
 				List<Board> list = bsv.getList();
-				log.info(" >>> list : {}", list);
-				//목적지 주소 설정
+				// log.info(" >>> list : {}", list); // 로그 너무 길면 주석 처리
 				request.setAttribute("list", list);
 				destPage = "/board/list.jsp";
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			break;
 			
+		case "detail":
+			try {
+				int bno = Integer.parseInt(request.getParameter("bno"));
+				Board board = bsv.getDetail(bno);
+				// log.info(" >>> b : {}", board);
+				request.setAttribute("b", board);
+				destPage = "/board/detail.jsp";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
 			
+		case "modify":
+			try {
+				int bno = Integer.parseInt(request.getParameter("bno"));
+				String title = request.getParameter("title");
+				String content = request.getParameter("content");
+				
+				Board b = new Board(bno, title, content);
+				log.info(" >>> b : {}", b);
+				
+				// 서비스 호출
+				// isOK = bsv.update(b);
+				// log.info(" >>> update : {}", (isOK > 0 ? "수정성공" : "수정실패"));
+				
+				// 수정 후 상세페이지로 이동
+				response.sendRedirect("/brd/detail?bno=" + bno);
+				return; // 여기서 메서드 종료!
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
 		}
 		
-		// 처리가 완료된 만들어진 응답객체를 jsp화면으로 보내기
-		rdp = request.getRequestDispatcher(destPage);
-		// 요청한 객체를 가지고 destPage로 포워딩
-		rdp.forward(request, response);
+		
+		
+		// [공통 처리] 
+		// insert 처럼 redirect로 이미 떠난 경우는 실행되지 않음 (위에서 return 했기 때문)
+		// list, detail, register 처럼 destPage가 있는 경우만 forward 실행
+		if(destPage != null && !destPage.isEmpty()) {
+            rdp = request.getRequestDispatcher(destPage);
+            rdp.forward(request, response);
+        }
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// get으로 오는 요청에 대한 처리를 하고, HTML 파일을 생성해 response 객체에 담아 전송 
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		service(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		service(request, response);
 	}
-
 }

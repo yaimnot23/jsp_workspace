@@ -93,6 +93,8 @@ public class Board {
 	public void setModdate(String moddate) {
 		this.moddate = moddate;
 	}
+	
+	
 
 	@Override
 	public String toString() {
