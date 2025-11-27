@@ -61,9 +61,10 @@
         </div>
         </div>
         <script type="text/javascript">
-        <c:out value="${b.bno}" var="bno"/></c:out>
-        </script>
-        
+const bnoVal = `<c:out value="${b.bno}" />`;
+console.log("bnoVal : " + bnoVal);
+</script>
+
 <script type="text/javascript" src="/resources/boardDetail.js"></script>
         
  
