@@ -32,10 +32,40 @@
         </tr>
         </table>
         
-        <!-- 수정, 삭제, 리스트 버튼 -->
+                       <!-- 수정, 삭제, 리스트 버튼 -->
         <a href="/brd/modify?bno=${b.bno }"><button>수정</button></a>
-        <a href=""><button>삭제</button></a>
+        <a href="/brd/remove?bno=${b.bno }"><button>삭제</button></a>
         <a href="/brd/list"><button>리스트</button></a>
+        
+        <div>
+        <h3>댓글 목록</h3>
+        <input type="text" id="cmtWriter" placeholder="writer..."><br>
+        <input type="text" id="cmtText" placeholder="Add Comment...">
+        <button type="button" id="cmtAddBtn">댓글 추가</button>
+        
 
+        
+        
+        </div>
+        
+        <!-- 댓글 출력 라인 -->
+        <div id="commentLine">
+        <div>
+        <div>cno, bno, writer, regdate
+        <div>
+             <input type="text" value="댓글 내용">
+             <button type="button">수정</button>
+             <button type="button">삭제</button>
+        </div>
+        </div>
+        </div>
+        </div>
+        <script type="text/javascript">
+        <c:out value="${b.bno}" var="bno"/></c:out>
+        </script>
+        
+<script type="text/javascript" src="/resources/boardDetail.js"></script>
+        
+ 
 </body>
 </html>

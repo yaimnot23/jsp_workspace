@@ -58,5 +58,17 @@ public class BoardDAOImpl implements BoardDAO {
 	    
 	    return isOK;
 	}
+	
+	@Override
+	public int remove(int bno) {
+	    // boardMapper.xml의 id="remove"를 호출
+	    int isOK = sql.delete("boardMapper.remove", bno);
+	    
+	    // DB 변경 사항이므로 commit 필수
+	    if(isOK > 0) sql.commit();
+	    else sql.rollback();
+	    
+	    return isOK;
+	}
 
 }

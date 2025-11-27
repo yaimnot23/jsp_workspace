@@ -115,6 +115,24 @@ public class BoardController extends HttpServlet {
 			}
 			break;
 			
+			// switch(path) 내부에 추가
+		case "remove":
+		    try {
+		        // detail.jsp에서 쿼리스트링으로 보낸 ?bno=... 값을 받음
+		        int bno = Integer.parseInt(request.getParameter("bno"));
+		        
+		        isOK = bsv.remove(bno);
+		        log.info(" >>> remove : {}", (isOK > 0 ? "삭제성공" : "삭제실패"));
+		        
+		        // 삭제 후에는 리스트 페이지로 이동
+		        response.sendRedirect("/brd/list");
+		        return; // 메서드 종료
+		        
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		    break;
+			
 		
 		}
 		

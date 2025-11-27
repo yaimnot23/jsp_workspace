@@ -13,5 +13,7 @@ public interface BoardDAO {
 	Board getDetail(int bno);
 	
 	int update(Board b);
+	
+	int remove(int bno);
 
 }
