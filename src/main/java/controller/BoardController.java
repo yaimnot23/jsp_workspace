@@ -100,6 +100,26 @@ public class BoardController extends HttpServlet {
 			}
 			break;
 			
+		case "update":
+			try {
+				int bno = Integer.parseInt(request.getParameter("bno"));
+				String title = request.getParameter("title");
+				String content = request.getParameter("content");
+				
+				Board b = new Board(bno, title, content);
+				log.info(" >>> b : {}", b);
+				
+				isOK = bsv.update(b);
+				log.info(" >>> update : {}", (isOK > 0 ? "수정성공" : "수정실패"));
+				
+				// 수정 후 상세페이지로 이동
+				response.sendRedirect("/brd/detail?bno=" + bno);
+				return;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+			
 		
 		}
 		

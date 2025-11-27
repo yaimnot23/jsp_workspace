@@ -39,4 +39,10 @@ public class BoardServiceImpl implements BoardService {
 	public Board getDetail(int bno) {
 		return bdao.getDetail(bno);
 	}
+
+	@Override
+	public int update(Board b) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

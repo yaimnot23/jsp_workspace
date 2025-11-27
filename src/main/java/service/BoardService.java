@@ -11,4 +11,6 @@ public interface BoardService {
 	List<Board> getList();
 
 	Board getDetail(int bno);
+
+	int update(Board b);
 }

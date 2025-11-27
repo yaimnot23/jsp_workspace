@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h1>수정 상세보기</h1>
-	<form action="/brd/modify" method="post">
+	<form action="/brd/update" method="post">
 	<table>
         <tr>
             <th>번호</th>
@@ -18,7 +18,7 @@
         <tr>
             <th>제목</th>
             <td>
-            	<input>type="text" name="title" value="${b.title}">
+            	<input type="text" name="title" value="${b.title}">
             </td>
         </tr>
         <tr>
