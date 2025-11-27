@@ -10,6 +10,7 @@
 <body>
 	<h1>수정 상세보기</h1>
 	<form action="/brd/update" method="post">
+	<input type="hidden" name="bno" value="${b.bno}">
 	<table>
         <tr>
             <th>번호</th>
