@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 
 import repository.BoardDAO;
@@ -25,6 +27,12 @@ public class BoardServiceImpl implements BoardService {
 		// TODO Auto-generated method stub
 		log.info("BoardServiceImpl Test");
 		return bdao.insert(b);
+	}
+
+	@Override
+	public List<Board> getList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

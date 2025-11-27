@@ -1,5 +1,7 @@
 package repository;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,13 @@ public class BoardDAOImpl implements BoardDAO {
 		else sql.rollback();
 		
 		return isOK;
+	}
+	
+	@Override
+	public List<Board> getList() {
+		List<Board> list = sql.selectList("boardMapper.list");
+		
+		return list;
 	}
 
 }

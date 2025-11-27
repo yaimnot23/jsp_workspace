@@ -12,4 +12,9 @@
   
   </insert>
   
+  <select id="list" resultType="domain.Board">
+     SELECT * FROM board ORDER BY bno DESC
+  
+  </select>
+  
   </mapper>

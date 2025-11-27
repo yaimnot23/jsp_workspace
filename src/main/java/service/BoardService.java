@@ -1,9 +1,13 @@
 package service;
 
+import java.util.List;
+
 import domain.Board;
 
 public interface BoardService {
 
 	int insert(Board b);
+
+	List<Board> getList();
 
 }

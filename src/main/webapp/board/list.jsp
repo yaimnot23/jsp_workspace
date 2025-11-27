@@ -17,6 +17,14 @@
         <th>writer</th>
         <th>regdate</th>
     </tr>
+<c:forEach items="${list}" var="b">
+    <tr>
+        <td>${b.bno}</td>
+        <td>${b.title}</a></td>
+        <td>${b.writer}</td>
+        <td>${b.regdate}</td>
+     </tr>
+</c:forEach>
     
     <%-- Sample data row --%>
     <tr>

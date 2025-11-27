@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -88,6 +89,19 @@ public class BoardController extends HttpServlet {
 				e.printStackTrace();
 			}
 			break;
+		
+		case "list":
+			//목록보기(try~catch문)
+			try {
+				List<Board> list = bsv.getList();
+				log.info(" >>> list : {}", list);
+				//목적지 주소 설정
+				request.setAttribute("list", list);
+				destPage = "/board/list.jsp";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			
 		}
 		
