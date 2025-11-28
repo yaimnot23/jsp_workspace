@@ -37,7 +37,16 @@ create table comment(
     primary key(cno)
 );
 
+--------------------------------
 
+-- 페이징
+-- 2025-11-28
+-- 한 페이지 10개씩 게시물 출력
+-- 하단 페이지네이션 10개씩 출력
+
+select * from board order by bno desc limit 0, 10; -- 1페이지
+select * from board order by bno desc limit 10, 10; -- 2페이지
+select * from board where title like '%검색어%' order by bno desc limit #(pageStart}, #{qty};
 
 
 

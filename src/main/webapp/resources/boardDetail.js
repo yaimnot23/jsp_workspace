@@ -26,7 +26,7 @@ document.getElementById('cmtAddBtn').addEventListener('click', () => {
             document.getElementById('cmtText').value = ""; // 입력창 비우기
             getCommentList(bnoVal); // 댓글 목록 다시 불러오기
         } else {
-            alert("댓글 등록 실패 ㅠㅠ");
+            alert("댓글 등록 실패 ");
         }
     });
 });
@@ -62,7 +62,7 @@ async function getCommentList(bno) {
     }
 }
 
-// 화면에 댓글 뿌리기 (디자인 개선)
+// 화면에 댓글 뿌리기
 function spreadCommentList(result) {
     const div = document.getElementById('commentLine');
     div.innerHTML = ""; // 기존 내용 초기화
@@ -88,7 +88,7 @@ function spreadCommentList(result) {
         html +=     `<button type="button" data-cno="${result[i].cno}" class="delBtn">삭제</button>`;
         html += `</div>`;
         
-        html += `</div>`; // comment-box 닫기
+        html += `</div>`;
     }
     div.innerHTML = html;
 }
